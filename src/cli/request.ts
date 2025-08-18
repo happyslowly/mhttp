@@ -7,12 +7,16 @@ import { SingleBar } from "cli-progress";
 import { Transform } from "stream";
 
 export async function makeRequest(r: RequestOptions) {
-  const resp = await fetch(r.url, {
-    method: r.method,
-    headers: r.headers,
-    body: r.data,
-  });
-  await handleResponse(resp, r.verbose);
+  try {
+    const resp = await fetch(r.url, {
+      method: r.method,
+      headers: r.headers,
+      body: r.data,
+    });
+    await handleResponse(resp, r.verbose);
+  } catch (error) {
+    throw new Error(`Unable to reach: ${r.url}`);
+  }
 }
 
 async function handleResponse(resp: Response, verbose: boolean) {
