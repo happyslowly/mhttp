@@ -29,7 +29,9 @@ async function handleResponse(resp: Response, verbose: boolean) {
   }
 
   if (resp.status < 200 || resp.status >= 400) {
-    throw new Error(`${resp.status} ${resp.statusText}`);
+    const text = await resp.text();
+    logger.error(`${resp.status} ${resp.statusText} ${text}`);
+    return;
   }
 
   const contentType = resp.headers.get("content-type") || "";
